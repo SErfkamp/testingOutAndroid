@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="#000">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/bBaseline"
+            android:layout_width="400dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:text="Base"
+            android:textColor="#FFF"
+            android:background="#707070"
+            android:onClick="startBaseline"
+            android:layout_marginTop="50dp"/>
+
+        <Button
+            android:id="@+id/bShortLockings"
+            android:layout_width="400dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:text="Short"
+            android:textColor="#FFF"
+            android:background="#707070"
+            android:onClick="startShortLockings"
+            android:layout_marginTop="50dp"/>
+
+        <Button
+            android:id="@+id/bLongLockings"
+            android:layout_width="400dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:text="Long"
+            android:textColor="#FFF"
+            android:background="#707070"
+            android:onClick="startLongLockings"
+            android:layout_marginTop="50dp"/>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

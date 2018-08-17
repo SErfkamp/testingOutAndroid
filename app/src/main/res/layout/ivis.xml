@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".IVISActivity"
+    android:background="#000">
+
+    <ImageView
+        android:id="@+id/activeMenu"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:background="#707070"/>
+
+    <LinearLayout
+        android:id="@+id/MainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@android:color/transparent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:fadingEdge="horizontal">
+        </android.support.v7.widget.RecyclerView>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewSecond"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:fadingEdge="horizontal">
+        </android.support.v7.widget.RecyclerView>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewThird"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:fadingEdge="horizontal">
+        </android.support.v7.widget.RecyclerView>
+
+     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/activeItem"
+        android:layout_width="140dp"
+        android:layout_height="123dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/border"
+        android:layout_marginTop="10dp"/>
+
+    <ImageView
+        android:id="@+id/lockingBorder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/locking_border" />
+
+</RelativeLayout>
