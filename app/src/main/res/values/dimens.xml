@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="first">10dp</dimen>
-    <dimen name="second">170dp</dimen>
-    <dimen name="third">330dp</dimen>
+    <dimen name="first">120dp</dimen>
+    <dimen name="second">-270dp</dimen>
+    <dimen name="third">-670dp</dimen>
+    <dimen name="four">-1070dp</dimen>
+    <dimen name="five">-1470dp</dimen>
+
+    <dimen name="back">20dp</dimen>
+
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="menuHeight">200dp</dimen>
 </resources>

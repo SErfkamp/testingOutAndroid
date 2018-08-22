@@ -19,8 +19,8 @@ import android.view.animation.Interpolator;
 //https://stackoverflow.com/a/48071124/4311829
 
 public class CirclePagerIndicatorDecoration extends RecyclerView.ItemDecoration {
-    private int colorActive = Color.WHITE;
-    private int colorInactive = Color.DKGRAY;
+    private int colorActive = 0xffffffff;
+    private int colorInactive = 0x33000000;
 
     private static final float DP = Resources.getSystem().getDisplayMetrics().density;
 
@@ -37,11 +37,11 @@ public class CirclePagerIndicatorDecoration extends RecyclerView.ItemDecoration 
     /**
      * Indicator width.
      */
-    private final float mIndicatorItemLength = DP * 4;
+    private final float mIndicatorItemLength = DP * 6;
     /**
      * Padding between indicators.
      */
-    private final float mIndicatorItemPadding = DP * 8;
+    private final float mIndicatorItemPadding = DP * 12;
 
     /**
      * Some more natural animation interpolation
@@ -70,7 +70,7 @@ public class CirclePagerIndicatorDecoration extends RecyclerView.ItemDecoration 
         float indicatorStartX = (parent.getWidth() - indicatorTotalWidth) / 2F;
 
         // center vertically in the allotted space
-        float indicatorPosY = parent.getHeight() - mIndicatorHeight / 2F;
+        float indicatorPosY = mIndicatorHeight * 1.5F;
 
         drawInactiveIndicators(c, indicatorStartX, indicatorPosY, itemCount);
 
@@ -127,13 +127,14 @@ public class CirclePagerIndicatorDecoration extends RecyclerView.ItemDecoration 
             // calculate partial highlight
             float partialLength = mIndicatorItemLength * progress + mIndicatorItemPadding*progress;
 
-            c.drawCircle(highlightStart + partialLength, indicatorPosY, mIndicatorItemLength / 2F, mPaint);
+            //c.drawCircle(highlightStart + partialLength, indicatorPosY, mIndicatorItemLength / 2F, mPaint);
+            c.drawCircle(highlightStart , indicatorPosY, mIndicatorItemLength / 2F, mPaint);
+
         }
     }
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
-        outRect.bottom = mIndicatorHeight;
     }
 }
