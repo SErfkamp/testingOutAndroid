@@ -1,5 +1,6 @@
 package com.example.serfk.myapplication.Models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class IVIS {
@@ -7,12 +8,12 @@ public class IVIS {
     private ArrayList<Service> services;
     private int activeServiceIndex;
     private boolean locked;
-    private String name;
-    private String label;
+    private int lockingMode;
 
-    public IVIS(ArrayList<Service> services, String label) {
+    public IVIS(ArrayList<Service> services, int lockingMode) {
         this.services = services;
-        this.label = label;
+        this.lockingMode = lockingMode;
+        this.activeServiceIndex = 0;
     }
 
     public ArrayList<Service> getServices() {
@@ -31,22 +32,28 @@ public class IVIS {
         this.activeServiceIndex = activeServiceIndex;
     }
 
+    public int nextService() {
+        return activeServiceIndex < services.size()-1? ++activeServiceIndex : activeServiceIndex;
+    }
+
+    public int previousService() {
+        return activeServiceIndex > 0? --activeServiceIndex : activeServiceIndex;
+    }
+
+    public Service getActiveService() {
+        return services.get(activeServiceIndex);
+    }
+
+    public int getActiveParameterIndex() {
+        return services.get(activeServiceIndex).getActiveParameterIndex();
+    }
+
     public boolean isLocked() {
         return locked;
     }
 
-    public boolean lock(int millisecondsLocked) {
-        if(locked) {
-            return false;
-        } else {
-            new android.os.Handler().postDelayed(
-                    new Runnable() {
-                        public void run() {
-                            locked = false;
-                        }
-                    }, millisecondsLocked);
-            return true;
-        }
+    public void lock() {
+        locked = true;
     }
 
     public void unlock() {
@@ -57,19 +64,16 @@ public class IVIS {
         this.locked = locked;
     }
 
-    public String getName() {
-        return name;
+    public int getLockingMode() {
+        return lockingMode;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLockingMode(int lockingMode) {
+        this.lockingMode = lockingMode;
     }
 
-    public String getLabel() {
-        return label;
+    public int getServiceCount() {
+        return this.services.size();
     }
 
-    public void setLabel(String label) {
-        this.label = label;
-    }
 }

@@ -14,7 +14,7 @@
         android:layout_height="200dp"
         android:layout_alignRight="@+id/lowerBlock"
         android:layout_below="@id/upperBlock"
-        android:background="#707070" />
+        android:background="#656565" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewServiceName"
@@ -34,13 +34,13 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="480dp"
-            android:background="#707070" />
+            android:background="#656565" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="#707070"
+            android:background="#656565"
             android:layout_gravity="center"
             android:fadingEdge="horizontal"></android.support.v7.widget.RecyclerView>
 
@@ -48,7 +48,7 @@
             android:id="@+id/recyclerViewSecond"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="#707070"
+            android:background="#656565"
             android:layout_gravity="center"
             android:fadingEdge="horizontal">
 
@@ -58,7 +58,7 @@
             android:id="@+id/recyclerViewThird"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="#707070"
+            android:background="#656565"
             android:layout_gravity="center"
 
             android:fadingEdge="horizontal"></android.support.v7.widget.RecyclerView>
@@ -67,7 +67,7 @@
             android:id="@+id/recyclerViewFour"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="#707070"
+            android:background="#656565"
             android:layout_gravity="center"
 
             android:fadingEdge="horizontal"></android.support.v7.widget.RecyclerView>
@@ -76,7 +76,7 @@
             android:id="@+id/recyclerViewFive"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="#707070"
+            android:background="#656565"
             android:layout_gravity="center"
 
             android:fadingEdge="horizontal"></android.support.v7.widget.RecyclerView>
@@ -89,7 +89,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_centerVertical="true"
-        android:background="#00707070"
+        android:background="#00656565"
         android:fadingEdge="horizontal"
         android:layout_alignTop="@id/activeMenu"
         android:alpha="0">
@@ -104,14 +104,13 @@
         android:layout_marginTop="0dp"
         android:background="@android:color/black" />
 
-
     <ImageView
         android:id="@+id/leftFuzzy"
         android:layout_width="330dp"
         android:layout_height="200dp"
         android:layout_alignLeft="@id/upperBlock"
         android:layout_below="@id/upperBlock"
-        android:background="#CC707070" />
+        android:background="#CC656565" />
 
     <ImageView
         android:id="@+id/rightFuzzy"
@@ -119,7 +118,7 @@
         android:layout_height="200dp"
         android:layout_alignRight="@+id/lowerBlock"
         android:layout_below="@id/upperBlock"
-        android:background="#CC707070" />
+        android:background="#CC656565" />
 
     <ImageView
         android:id="@+id/lowerBlock"
@@ -141,8 +140,8 @@
 
     <ImageView
         android:id="@+id/confirm"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_alignBottom="@id/upperBlock"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
@@ -151,18 +150,20 @@
 
     <ImageView
         android:id="@+id/back"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_alignTop="@id/lowerBlock"
         android:layout_centerHorizontal="true"
+        android:padding="20dp"
         android:layout_marginTop="20dp"
         android:alpha="0"
         android:background="@drawable/back" />
 
     <ImageView
         android:id="@+id/select"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:padding="20dp"
         android:layout_alignBottom="@id/upperBlock"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
@@ -171,11 +172,12 @@
 
     <ImageView
         android:id="@+id/cancel"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_alignTop="@id/lowerBlock"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
+        android:padding="20dp"
         android:alpha="0"
         android:background="@drawable/back_red" />
 
@@ -202,6 +204,80 @@
         android:visibility="invisible"
         android:textStyle="bold" />
 
+    <com.rd.PageIndicatorView
+        android:id="@+id/horizontalIndicatorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:piv_animationType="scale"
+        android:layout_alignTop="@id/activeMenu"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        app:piv_selectedColor="#FFF"
+        app:piv_unselectedColor="#000"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/verticalServiceName"
+        android:orientation="vertical"
+        android:layout_marginTop="-15dp"
+        android:layout_marginLeft="85dp"
+        android:layout_alignTop="@id/activeMenu">
+
+        <TextView
+            android:id="@+id/tv_one"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="50dp"
+            android:textStyle="bold"
+            android:textColor="#FFF"
+            android:layout_margin="5dp"
+            android:text="ALPHA"/>
+
+        <TextView
+            android:id="@+id/tv_two"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="50dp"
+            android:textColor="#FFF"
+            android:textStyle="bold"
+            android:layout_margin="5dp"
+            android:text="OMEGA"/>
+
+        <TextView
+            android:id="@+id/tv_three"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="50dp"
+            android:textColor="#FFF"
+            android:textStyle="bold"
+            android:layout_margin="5dp"
+            android:text="DELTA"/>
+
+    </LinearLayout>
+
+    <com.rd.PageIndicatorView
+        android:id="@+id/verticalIndicatorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/activeMenu"
+        android:layout_alignBottom="@id/activeMenu"
+        android:layout_marginLeft="50dp"
+        android:layout_marginVertical="50dp"
+        app:piv_animationType="scale"
+        app:piv_interactiveAnimation="true"
+        app:piv_selectedColor="#FFF"
+        app:piv_unselectedColor="#000"
+        app:piv_orientation="vertical"
+        />
+    <!--app:piv_dynamicCount="true"-->
+
+    <!-- attrs:piv_padding="12dp"
+        attrs:piv_radius="8dp"-->
     <ImageView
         android:id="@+id/lockingBorder"
         android:layout_width="match_parent"

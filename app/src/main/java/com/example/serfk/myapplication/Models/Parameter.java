@@ -32,16 +32,20 @@ public class Parameter {
         this.activeValueIndex = activeValueIndex;
     }
 
-    public int getCountOfValues() {
+    public int getValueCount() {
         return values.size();
     }
 
+    public String getCurrentValue() {
+        return values.get(activeValueIndex);
+    }
+
     public int nextValue() {
-        return activeValueIndex < values.size()-1? activeValueIndex++: activeValueIndex;
+        return activeValueIndex < values.size()-1? ++activeValueIndex: activeValueIndex;
     }
 
     public int previousValue() {
-        return activeValueIndex > 0? activeValueIndex--: activeValueIndex;
+        return activeValueIndex > 0? --activeValueIndex: activeValueIndex;
     }
 
     public boolean addValue(String newValue) {
@@ -58,6 +62,11 @@ public class Parameter {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return label;
     }
 
     public String getLabel() {

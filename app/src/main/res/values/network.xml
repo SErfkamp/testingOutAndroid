@@ -1,0 +1,4 @@
+<resources>
+    <string name="ip">192.168.178.29</string>
+    <integer name="port">9020</integer>
+</resources>

@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,12 +16,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private static final String TAG = "RecyclerViewAdapter";
     private final int mListItem;
 
-    private ArrayList<String> mNames;
+    private ArrayList<String> mLabels;
     private Context mContext;
     private int selectedPos = RecyclerView.NO_POSITION;
 
-    public RecyclerViewAdapter(ArrayList<String> mNames, Context mContext, int mListItem) {
-        this.mNames = mNames;
+    public RecyclerViewAdapter(ArrayList<String> mLabels, Context mContext, int mListItem) {
+        this.mLabels = mLabels;
         this.mContext = mContext;
         this.mListItem = mListItem;
     }
@@ -36,16 +35,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        holder.name.setText(mNames.get(position));
+        holder.name.setText(mLabels.get(position));
         holder.itemView.setSelected(selectedPos == position);
-        if(position == 0 && mNames.get(position).equals("")) {
+        if(position == 0 && mLabels.get(position).equals("")) {
             holder.menuChangeImage.setBackgroundResource(R.drawable.change_menu);
         }
     }
 
     @Override
     public int getItemCount() {
-        return mNames.size();
+        return mLabels.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -21,18 +21,21 @@ public class MainActivity extends AppCompatActivity {
     public void startBaseline(View view) {
         Intent intent = new Intent(this, IVISActivity.class);
         intent.putExtra("lockingMode",0);
+        intent.putExtra("lockingDuration",0);
         startActivity(intent);
     }
 
     public void startShortLockings(View view) {
         Intent intent = new Intent(this, IVISActivity.class);
         intent.putExtra("lockingMode",1);
+        intent.putExtra("lockingDuration",1500);
         startActivity(intent);
     }
 
     public void startLongLockings(View view) {
         Intent intent = new Intent(this, IVISActivity.class);
         intent.putExtra("lockingMode",2);
+        intent.putExtra("lockingDuration",2500);
         startActivity(intent);
     }
 
