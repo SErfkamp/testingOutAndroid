@@ -44,5 +44,17 @@
             android:background="#707070"
             android:onClick="startLongLockings"
             android:layout_marginTop="50dp"/>
+
+        <Button
+            android:id="@+id/bSmartLockings"
+            android:layout_width="400dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:text="Smart"
+            android:textColor="#FFF"
+            android:background="#707070"
+            android:onClick="startSmartLockings"
+            android:layout_marginTop="50dp"/>
+
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

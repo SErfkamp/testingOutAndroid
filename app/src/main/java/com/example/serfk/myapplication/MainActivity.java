@@ -28,14 +28,21 @@ public class MainActivity extends AppCompatActivity {
     public void startShortLockings(View view) {
         Intent intent = new Intent(this, IVISActivity.class);
         intent.putExtra("lockingMode",1);
-        intent.putExtra("lockingDuration",1500);
+        intent.putExtra("lockingDuration",getResources().getInteger(R.integer.short_locking));
         startActivity(intent);
     }
 
     public void startLongLockings(View view) {
         Intent intent = new Intent(this, IVISActivity.class);
         intent.putExtra("lockingMode",2);
-        intent.putExtra("lockingDuration",2500);
+        intent.putExtra("lockingDuration",getResources().getInteger(R.integer.long_locking));
+        startActivity(intent);
+    }
+
+    public void startSmartLockings(View view) {
+        Intent intent = new Intent(this, IVISActivity.class);
+        intent.putExtra("lockingMode",3);
+        intent.putExtra("lockingDuration",getResources().getInteger(R.integer.short_locking));
         startActivity(intent);
     }
 

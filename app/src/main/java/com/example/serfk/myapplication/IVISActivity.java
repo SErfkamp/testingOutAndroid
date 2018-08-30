@@ -57,9 +57,13 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
 
     private IVIS ivis;
 
-    private int lockDuration;
+    private int maxInteractionDuration;
 
     private SocketClient socketClient;
+    private int lockingDuration;
+    private boolean isInteracting = false;
+
+    private int timeOffset = 0;
 
 
     @Override
@@ -72,7 +76,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         thread = new Thread(clientThread);
         thread.start();*/
 
-
+        this.lockingDuration = getResources().getInteger(R.integer.locking_duration);
 
         this.animationHelper = findViewById(R.id.animationHelper);
 
@@ -101,7 +105,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         this.updateServiceView();
         this.updateParameterView();
 
-        lockDuration = this.getIntent().getIntExtra("lockingDuration", 1000);
+        maxInteractionDuration = this.getIntent().getIntExtra("lockingDuration", 1000);
 
         String ip = getResources().getString(R.string.ip);
         int port = getResources().getInteger(R.integer.port);
@@ -115,87 +119,123 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
             public boolean onSwipe(Direction direction) {
                 if (ivis.isLocked() && ivis.getLockingMode() > 0) return true;
 
+                lockingHandler();
+
                 int activeServiceIndex = ivis.getActiveServiceIndex();
                 int activeParameterIndexForService = ivis.getActiveService().getActiveParameterIndex();
                 int activeValueIndexForParameter = ivis.getActiveService().getActiveParameter().getActiveValueIndex();
 
+                String msg = "";
+
                 if (direction == Direction.up) {
                     if (activeParameterIndexForService == 0) {
-                        if ( !(activeServiceIndex == ivis.nextService())) updateServiceView();
+                        if ( !(activeServiceIndex == ivis.nextService())) {
+                            msg += "service-up";
+                            updateServiceView();
+                        } else {
+                            msg += "service-up-error";
+                        }
 
                         Log.d(TAG, "onSwipe: up  - activeService: " + ivis.getActiveServiceIndex());
 
-                        //clientThread.sendMessage("Up");
                     } else {
                         if (activeMenuLevel == 0) {
+                            msg += "return";
                             doReturn();
                         } else if (activeMenuLevel == 1) {
+                            msg += "abort";
                             doAbort();
                         }
                     }
                 }
 
-                if (direction == Direction.down) {
+                else if (direction == Direction.down) {
 
                     if (activeParameterIndexForService == 0) {
 
-                        if ( !(activeServiceIndex == ivis.previousService())) updateServiceView();
+                        if ( !(activeServiceIndex == ivis.previousService())) {
+                            msg += "service-down";
+                            updateServiceView();
+                        } else {
+                            msg += "service-down-error-";
+                        }
 
                         Log.d(TAG, "onSwipe: down  - activeService: " + ivis.getActiveServiceIndex());
 
-                        //clientThread.sendMessage("Down");
                     } else {
                         if (activeMenuLevel == 0) {
+                            msg += "confirm";
                             doConfirm();
                         } else if (activeMenuLevel == 1) {
+                            msg += "select";
                             doSelect();
                         }
                     }
                 }
 
-                if (direction == Direction.left) {
+                else if (direction == Direction.left) {
                     if(activeMenuLevel == 0) {
                         if (activeParameterIndexForService == 0) {
                             showConfirmAndBackButton();
                             hideVerticalIndicatorView();
                         }
 
-                        if ( !(activeParameterIndexForService == ivis.getActiveService().nextParameter())) updateParameterView();
+                        if ( !(activeParameterIndexForService == ivis.getActiveService().nextParameter())) {
+                            msg += "param-left";
+                            updateParameterView();
+                        } else {
+                            msg += "param-left-error-";
+                        }
 
                         Log.d(TAG, "onSwipe: left - activeParameter: " + ivis.getActiveService().getActiveParameterIndex());
 
-                        //clientThread.sendMessage("Left");
                     } else {
-                        if ( !(activeValueIndexForParameter == ivis.getActiveService().getActiveParameter().nextValue())) updateValueView();
+                        if ( !(activeValueIndexForParameter == ivis.getActiveService().getActiveParameter().nextValue())) {
+                            msg += "value-left";
+
+                            updateValueView();
+                        } else {
+                            msg += "value-left-error-";
+
+                        }
 
                         Log.d(TAG, "onSwipe: left - activeValue: " + ivis.getActiveService().getActiveParameter().getActiveValueIndex());
-
-                        //clientThread.sendMessage("Left");
                     }
 
                 }
 
-                if (direction == Direction.right) {
+                else if (direction == Direction.right) {
                     if(activeMenuLevel == 0) {
                         if (activeParameterIndexForService == 1) {
                             hideConfirmAndBackButton();
                             showVerticalIndicatorView();
                         }
 
-                        if ( !(activeParameterIndexForService == ivis.getActiveService().previousParameter())) updateParameterView();
+                        if ( !(activeParameterIndexForService == ivis.getActiveService().previousParameter())) {
+                            msg += "param-right";
+                            updateParameterView();
+                        } else {
+                            msg += "param-right-error";
+                        }
 
                         Log.d(TAG, "onSwipe: right - activeParameter: " + ivis.getActiveService().getActiveParameter().getActiveValueIndex());
 
-                        //clientThread.sendMessage("Right");
                     } else {
-                        if ( !(activeValueIndexForParameter == ivis.getActiveService().getActiveParameter().previousValue())) updateValueView();
+                        if ( !(activeValueIndexForParameter == ivis.getActiveService().getActiveParameter().previousValue())) {
+                            msg += "value-right";
+                            updateValueView();
+                        } else {
+                            msg += "value-right-error";
+                        }
 
                         Log.d(TAG, "onSwipe: right - activeValue: " + ivis.getActiveService().getActiveParameter().getActiveValueIndex());
-
-                        //clientThread.sendMessage("Right");
                     }
 
                 }
+
+                socketClient.sendDataToNetwork(msg+"-"+ivis.getActiveServiceIndex()
+                        +"-"+ivis.getActiveService().getActiveParameterIndex()
+                        +"-"+ivis.getActiveService().getActiveParameter().getActiveValueIndex());
 
                 return true;
             }
@@ -204,7 +244,6 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         findViewById(R.id.MainLayout).setOnTouchListener(this);
 
     }
-
 
     /*
     ACTIONS
@@ -221,6 +260,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         updateHorizontalIndicator();
 
         // hide back button
+        Log.d(TAG, "HIDE backButton");
         backButton.setAlpha(0f);
 
         // confirm button to middle
@@ -251,6 +291,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         updateHorizontalIndicator();
 
         // hide confirm button
+        Log.d(TAG, "HIDE confirmButton");
         confirmButton.setAlpha(0f); //.animate().alpha(0).setDuration(100).start();
 
         //recyclerViewServices[ivis.getActiveServiceIndex()].animate().alpha(0).setDuration(500).start();// .setAlpha(0f);
@@ -279,6 +320,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         parameterName.setVisibility(View.INVISIBLE);
 
         // hide abort button
+        Log.d(TAG, "HIDE abortButton");
         abortButton.setAlpha(0f);// .animate().alpha(0).setDuration(100).start();
 
         // select button to middle
@@ -295,7 +337,6 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
             }
         }).setDuration(500).start();
 
-        this.lockIvis();
     }
 
     // Aborting means to cancel choosing a value of a parameter
@@ -307,6 +348,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         parameterName.setVisibility(View.INVISIBLE);
 
         // hide select button
+        Log.d(TAG, "HIDE selectButton");
         selectButton.setAlpha(0f);
 
         // hide recyclerView items
@@ -344,12 +386,16 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     private void resetConfirmButton() {
+        Log.d(TAG, "resetConfirmButton");
+
         confirmButton.animate().setListener(null);
         confirmButton.setAlpha(0f);
         confirmButton.setY(getResources().getDimension(R.dimen.upperButton));
     }
 
     public void resetBackButton() {
+        Log.d(TAG, "resetBackButton");
+
         backButton.animate().setListener(null);
         backButton.setAlpha(0f);
         backButton.setY(getResources().getDimension(R.dimen.lowerButton));
@@ -357,12 +403,16 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     private void resetSelectButton() {
+        Log.d(TAG, "resetSelectButton");
+
         selectButton.animate().setListener(null);
         selectButton.setAlpha(0f);
         selectButton.setY(getResources().getDimension(R.dimen.upperButton));
     }
 
     private void resetAbortButton() {
+        Log.d(TAG, "resetAbortButton");
+
         abortButton.animate().setListener(null);
         abortButton.setAlpha(0f);
         abortButton.setY(getResources().getDimension(R.dimen.lowerButton));
@@ -382,21 +432,28 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
 
 
     private void showConfirmAndBackButton() {
+        Log.d(TAG, "showConfirmAndBackButton");
+
         confirmButton.setAlpha(1f);
         backButton.setAlpha(1f);
     }
 
     private void hideConfirmAndBackButton() {
+        Log.d(TAG, "hideConfirmAndbackButton");
         confirmButton.setAlpha(0f);
         backButton.setAlpha(0f);
     }
 
     private void showSelectAndCancelButton() {
+        Log.d(TAG, "showSelectAndCancelButton");
+
         selectButton.setAlpha(1f);
         abortButton.setAlpha(1f);
     }
 
     private void hideSelectAndCancelButton() {
+        Log.d(TAG, "hideSelectAndCancelButton");
+
         selectButton.setAlpha(0f);
         abortButton.setAlpha(0f);
     }
@@ -482,7 +539,22 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
     LOCKING METHODS
      */
 
+    private void lockingHandler() {
+        if (!isInteracting) {
+            isInteracting = true;
+            new android.os.Handler().postDelayed(
+                    new Runnable() {
+                        public void run() {
+                            lockIvis();
+                        }
+                    }, maxInteractionDuration);
+        }
+    }
+
     public boolean lockIvis() {
+
+        //dont lock in Baseline
+        if(ivis.getLockingMode() == 0) return false;
 
         Log.d(TAG, "lock IVIS");
 
@@ -490,7 +562,8 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
             return false;
         } else {
             Log.d(TAG,"send lock");
-            socketClient.sendDataToNetwork("ivis_locked");
+            //only send when ivis creates locking and not when lockings are send from openDS
+            if (ivis.getLockingMode() < 3) socketClient.sendDataToNetwork("ivis_locked");
 
             ivis.lock();
 
@@ -501,7 +574,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
                         public void run() {
                             unlockIvis();
                         }
-                    }, lockDuration);
+                    }, lockingDuration);
             return true;
         }
     }
@@ -510,6 +583,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         Log.d(TAG, "unlock IVIS");
 
         if(ivis.isLocked()) {
+            isInteracting = false;
             Log.d(TAG,"send unlock");
 
             socketClient.sendDataToNetwork("ivis_unlocked");
@@ -599,9 +673,6 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
             recyclerViewServices[i].setLayoutManager(layoutManager);
             recyclerViewServices[i].setAdapter(adapter);
             recyclerViewServices[i].setHorizontalFadingEdgeEnabled(true);
-            //SnapHelperOneByOne startSnapHelper = new SnapHelperOneByOne();
-            //startSnapHelper.attachToRecyclerView(recyclerViewServices[i]);
-
         }
 
         ArrayList<String> values = ivis.getActiveService().getParameters().get(1).getValues();
@@ -613,17 +684,14 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         recyclerViewValues.setLayoutManager(layoutManagerValue);
         recyclerViewValues.setAdapter(adapterValue);
         recyclerViewValues.setHorizontalFadingEdgeEnabled(true);
-        //SnapHelperOneByOne startSnapHelper = new SnapHelperOneByOne();
-        //startSnapHelper.attachToRecyclerView(recyclerViewValues);
     }
 
-
-    public int getLockDuration() {
-        return lockDuration;
+    public int getMaxInteractionDuration() {
+        return maxInteractionDuration;
     }
 
-    public void setLockDuration(int lockDuration) {
-        this.lockDuration = lockDuration;
+    public void setMaxInteractionDuration(int maxInteractionDuration) {
+        this.maxInteractionDuration = maxInteractionDuration;
     }
 
     @Override
@@ -631,77 +699,6 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         super.onDestroy();
         socketClient.cancel(true); //In case the task is currently running
     }
-
-
-    /*class ClientThread implements Runnable {
-
-        private Socket socket;
-        private BufferedReader input;
-
-        @Override
-        public void run() {
-
-            try {
-                InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
-                socket = new Socket(serverAddr, SERVERPORT);
-
-                while (!Thread.currentThread().isInterrupted()) {
-
-                    Log.i(TAG, "Waiting for message from server...");
-
-                    this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    String message = input.readLine();
-                    Log.i(TAG, "Message received from the server : " + message);
-
-                    if (null == message || "Disconnect".contentEquals(message)) {
-                        Thread.interrupted();
-                        message = "Server Disconnected.";
-                        updateMessage(getTime() + " | Server : " + message);
-                        break;
-                    }
-
-                    updateMessage(getTime() + " | Server : " + message);
-
-                }
-
-            } catch (UnknownHostException e1) {
-                e1.printStackTrace();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-
-        }
-
-        void sendMessage(String message) {
-            try {
-                if (null != socket) {
-                    PrintWriter out = new PrintWriter(new BufferedWriter(
-                            new OutputStreamWriter(socket.getOutputStream())),
-                            true);
-                    out.println(message);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-
-        }
-
-    }
-
-    String getTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        return sdf.format(new Date());
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (null != clientThread) {
-            clientThread.sendMessage("Disconnect");
-            clientThread = null;
-        }
-    }*/
 
 }
 
