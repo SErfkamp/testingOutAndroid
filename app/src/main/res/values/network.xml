@@ -1,5 +1,8 @@
 <resources>
     <!--<string name="ip">192.168.178.29</string>-->
-    <string name="ip">172.18.187.250</string>
+    <!--<string name="ip">172.18.187.250</string>-->
+    <!--<string name="ip">172.20.10.9</string>-->
+    <string name="ip">131.159.215.27</string>
+    <!--<string name="ip">127.0.0.1</string>-->
     <integer name="port">9020</integer>
 </resources>

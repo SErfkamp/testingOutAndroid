@@ -45,10 +45,13 @@ public class SocketClient extends AsyncTask<Void, byte[], Boolean> {
             Log.i("AsyncTask", "doInBackground: Creating socket");
             SocketAddress sockaddr = new InetSocketAddress( ip, port);
             nsocket = new Socket();
-            nsocket.connect(sockaddr, 5000); //10 second connection timeout
+            nsocket.connect(sockaddr, 5000); //5 second connection timeout
             if (nsocket.isConnected()) {
                 nis = nsocket.getInputStream();
                 nos = new PrintWriter(nsocket.getOutputStream());
+
+                this.sendDataToNetwork("lockingMode_"+ivisActivity.getIvis().getLockingMode());
+
                 Log.i(TAG, "doInBackground: Socket created, streams assigned");
                 Log.i(TAG, "doInBackground: Waiting for inital data...");
                 byte[] buffer = new byte[4096];
@@ -133,17 +136,14 @@ public class SocketClient extends AsyncTask<Void, byte[], Boolean> {
     @Override
     protected void onCancelled() {
         Log.i("AsyncTask", "Cancelled.");
-        //btnStart.setVisibility(View.VISIBLE);
     }
     @Override
     protected void onPostExecute(Boolean result) {
         if (result) {
             Log.i("AsyncTask", "onPostExecute: Completed with an Error.");
-           // textStatus.setText("There was a connection error.");
         } else {
             Log.i("AsyncTask", "onPostExecute: Completed.");
         }
-        //btnStart.setVisibility(View.VISIBLE);
     }
 
 }

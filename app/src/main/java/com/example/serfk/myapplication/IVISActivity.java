@@ -61,7 +61,6 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
 
     private SocketClient socketClient;
     private int lockingDuration;
-    public int lockingMode;
 
     private boolean isInteracting = false;
 
@@ -115,16 +114,13 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         socketClient = new SocketClient(ip, port, this);
         socketClient.execute();
 
-        // tell openDS which lockingMode is used
-        socketClient.sendDataToNetwork("lockingMode_"+lockingMode);
-
         gestureDetector = new GestureDetector(this, new OnSwipeListener(){
 
             @Override
             public boolean onSwipe(Direction direction) {
                 if (ivis.isLocked() && ivis.getLockingMode() > 0) return true;
 
-                lockingHandler();
+                if (ivis.getLockingMode() < 3) lockingHandler();
 
                 int activeServiceIndex = ivis.getActiveServiceIndex();
                 int activeParameterIndexForService = ivis.getActiveService().getActiveParameterIndex();
@@ -223,7 +219,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
                             msg += "param-right-error";
                         }
 
-                        Log.d(TAG, "onSwipe: right - activeParameter: " + ivis.getActiveService().getActiveParameter().getActiveValueIndex());
+                        Log.d(TAG, "onSwipe: right - activeParameter: " + ivis.getActiveService().getActiveParameterIndex());
 
                     } else {
                         if ( !(activeValueIndexForParameter == ivis.getActiveService().getActiveParameter().previousValue())) {
@@ -543,6 +539,9 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
     /*
     LOCKING METHODS
      */
+    public IVIS getIvis() {
+        return ivis;
+    }
 
     private void lockingHandler() {
         if (!isInteracting) {
@@ -658,6 +657,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int parentWidth = metrics.widthPixels;
         int itemWidth = (int) getResources().getDimension(R.dimen.itemWidth);
+        int factor = getResources().getInteger(R.integer.animation_speed);
 
         //right now only works for same parameter length for every service
         verticalIndicatorView.setCount(ivis.getServiceCount()); // specify total count of indicators
@@ -668,7 +668,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
             ArrayList<String> params = ivis.getServices().get(i).getParametersAsStringArray();
 
             CustomLayoutManager layoutManager = new CustomLayoutManager(
-                    this, LinearLayoutManager.HORIZONTAL, false, parentWidth, itemWidth, ivis.getServiceCount(), 8);
+                    this, LinearLayoutManager.HORIZONTAL, false, parentWidth, itemWidth, ivis.getServiceCount(), factor);
             RecyclerViewAdapter adapter = new RecyclerViewAdapter(params, this, R.layout.layout_listitem);
 
             LinearLayout servicesLayout = findViewById(R.id.MainLayout);
@@ -683,7 +683,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         ArrayList<String> values = ivis.getActiveService().getParameters().get(1).getValues();
 
         CustomLayoutManager layoutManagerValue = new CustomLayoutManager(
-                this, LinearLayoutManager.HORIZONTAL, false, parentWidth, itemWidth, values.size(), 8);
+                this, LinearLayoutManager.HORIZONTAL, false, parentWidth, itemWidth, values.size(), factor);
         RecyclerViewAdapter adapterValue = new RecyclerViewAdapter(values, this, R.layout.layout_listitem_value);
         recyclerViewValues = findViewById(R.id.recyclerViewValue);
         recyclerViewValues.setLayoutManager(layoutManagerValue);
