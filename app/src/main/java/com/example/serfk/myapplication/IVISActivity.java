@@ -61,6 +61,8 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
 
     private SocketClient socketClient;
     private int lockingDuration;
+    public int lockingMode;
+
     private boolean isInteracting = false;
 
     private int timeOffset = 0;
@@ -112,6 +114,9 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
 
         socketClient = new SocketClient(ip, port, this);
         socketClient.execute();
+
+        // tell openDS which lockingMode is used
+        socketClient.sendDataToNetwork("lockingMode_"+lockingMode);
 
         gestureDetector = new GestureDetector(this, new OnSwipeListener(){
 

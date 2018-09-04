@@ -1,4 +1,5 @@
 <resources>
-    <string name="ip">192.168.178.29</string>
+    <!--<string name="ip">192.168.178.29</string>-->
+    <string name="ip">172.18.187.250</string>
     <integer name="port">9020</integer>
 </resources>
