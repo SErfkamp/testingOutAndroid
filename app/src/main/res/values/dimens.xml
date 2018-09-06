@@ -14,4 +14,6 @@
     <dimen name="lowerButton">475dp</dimen>
     <dimen name="middle">290dp</dimen>
 
+    <dimen name="pos_0_top_margin">240dp</dimen>
+
 </resources>

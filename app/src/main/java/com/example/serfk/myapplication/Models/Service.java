@@ -27,6 +27,11 @@ public class Service {
         this.activeParameterIndex = activeParameterIndex;
     }
 
+    @Override
+    public String toString() {
+        return this.label;
+    }
+
     public ArrayList<Parameter> getParameters() {
         return parameters;
     }

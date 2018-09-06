@@ -2,6 +2,7 @@ package com.example.serfk.myapplication;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +26,7 @@ import com.example.serfk.myapplication.Network.SocketClient;
 import com.rd.PageIndicatorView;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class IVISActivity extends AppCompatActivity implements View.OnTouchListener {
 
@@ -41,6 +43,10 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
 
     private RecyclerView[] recyclerViewServices = new RecyclerView[5];
     private RecyclerView recyclerViewValues;
+    private RecyclerView recyclerViewServiceNames;
+
+    private TextView[] serviceNameTextViews = new TextView[5];
+
 
     private PageIndicatorView verticalIndicatorView;
     private PageIndicatorView horizontalIndicatorView;
@@ -52,9 +58,6 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
     // specifies which level is active: parameter = 0, value = 1
     private int activeMenuLevel = 0;
 
-    public static final int SERVERPORT = 9020;
-    public static final String SERVER_IP = "10.0.2.2";
-
     private IVIS ivis;
 
     private int maxInteractionDuration;
@@ -64,18 +67,16 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
 
     private boolean isInteracting = false;
 
-    private int timeOffset = 0;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ivis);
 
-        // Connect to socket
-        /*clientThread = new ClientThread();
-        thread = new Thread(clientThread);
-        thread.start();*/
+        serviceNameTextViews[0] = findViewById(R.id.tv_one);
+        serviceNameTextViews[1] = findViewById(R.id.tv_two);
+        serviceNameTextViews[2] = findViewById(R.id.tv_three);
+        serviceNameTextViews[3] = findViewById(R.id.tv_four);
+        serviceNameTextViews[4] = findViewById(R.id.tv_five);
 
         this.lockingDuration = getResources().getInteger(R.integer.locking_duration);
 
@@ -97,6 +98,9 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         horizontalIndicatorView.setSelection(0);
 
         this.recyclerViewValues = findViewById(R.id.recyclerViewValue);
+
+        this.recyclerViewServiceNames = findViewById(R.id.recyclerViewServiceName);
+
 
         lockingBorder = findViewById(R.id.lockingBorder);
         lockingBorder.setVisibility(View.INVISIBLE);
@@ -254,6 +258,8 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
     private void doConfirm() {
         activeMenuLevel = 1;
 
+        final int activeServiceIndex = ivis.getActiveServiceIndex();
+
         // scroll to value
         int activeValueIndex = ivis.getActiveService().getActiveParameter().getActiveValueIndex();
         recyclerViewValues.scrollToPosition(activeValueIndex);
@@ -261,7 +267,6 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         updateHorizontalIndicator();
 
         // hide back button
-        Log.d(TAG, "HIDE backButton");
         backButton.setAlpha(0f);
 
         // confirm button to middle
@@ -273,7 +278,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
                 // show new recyclerView
                 recyclerViewValues.setAlpha(1f);
                 // hide recyclerView
-                recyclerViewServices[ivis.getActiveServiceIndex()].setAlpha(0f);// .animate().alpha(0).setDuration(100).start();
+                recyclerViewServices[activeServiceIndex].setAlpha(0f);
 
                 // hide parameter Name
                 parameterName.setVisibility(View.VISIBLE);
@@ -281,11 +286,16 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
                 showSelectAndCancelButton();
                 resetConfirmButton();
 
+                // hide back button
+                backButton.setAlpha(0f);
+
             }
         }).setDuration(500).start();
     }
 
     private void doReturn() {
+
+        final int activeServiceIndex = ivis.getActiveServiceIndex();
 
         ivis.getActiveService().setActiveParameterIndex(0);
         showVerticalIndicatorView();
@@ -295,18 +305,19 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         Log.d(TAG, "HIDE confirmButton");
         confirmButton.setAlpha(0f); //.animate().alpha(0).setDuration(100).start();
 
-        //recyclerViewServices[ivis.getActiveServiceIndex()].animate().alpha(0).setDuration(500).start();// .setAlpha(0f);
-
         // back button to middle
         backButton.animate().y(getResources().getDimension(R.dimen.middle)).setListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
 
-                recyclerViewServices[ivis.getActiveServiceIndex()].setAlpha(0f);
+                Log.d(TAG, "recyclerView Alpha 0 - " + activeServiceIndex);
+                recyclerViewServices[activeServiceIndex].setAlpha(0f);
 
-                resetActiveItem();
+                resetActiveItem(activeServiceIndex);
                 resetBackButton();
+
+                confirmButton.setAlpha(0f); //.animate().alpha(0).setDuration(100).start();
 
             }
         }).setDuration(500).start();
@@ -316,6 +327,8 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
     // Choosing a value of a parameter is selecting
     private void doSelect() {
         activeMenuLevel = 0;
+
+        final int activeServiceIndex = ivis.getActiveServiceIndex();
 
         updateHorizontalIndicator();
         parameterName.setVisibility(View.INVISIBLE);
@@ -330,10 +343,14 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 recyclerViewValues.setAlpha(0f);
-                recyclerViewServices[ivis.getActiveServiceIndex()].setAlpha(1f);
+                recyclerViewServices[activeServiceIndex].setAlpha(1f);
 
                 showConfirmAndBackButton();
                 resetSelectButton();
+
+                // hide abort button
+                Log.d(TAG, "HIDE abortButton");
+                abortButton.setAlpha(0f);// .animate().alpha(0).setDuration(100).start();
 
             }
         }).setDuration(500).start();
@@ -352,9 +369,6 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         Log.d(TAG, "HIDE selectButton");
         selectButton.setAlpha(0f);
 
-        // hide recyclerView items
-        //recyclerViewValues.animate().alpha(0).setDuration(100).start();
-
         // abort button to middle
         abortButton.animate().y(getResources().getDimension(R.dimen.middle)).setListener(new AnimatorListenerAdapter() {
             @Override
@@ -367,6 +381,11 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
                 recyclerViewServices[activeServiceIndex].setAlpha(1f);
 
                 resetAbortButton();
+
+                // hide select button
+                Log.d(TAG, "HIDE selectButton");
+                selectButton.setAlpha(0f);
+
             }
         }).setDuration(500).start();
 
@@ -377,13 +396,13 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
     RESETS
      */
 
-    public void resetActiveItem() {
-        int activeServiceIndex = ivis.getActiveServiceIndex();
+    public void resetActiveItem(int activeServiceIndex) {
 
         ivis.getActiveService().setActiveParameterIndex(0);
 
         recyclerViewServices[activeServiceIndex].scrollToPosition(0);
         recyclerViewServices[activeServiceIndex].setAlpha(1f);
+        Log.d(TAG,"resetActiveItem: " + activeServiceIndex);
     }
 
     private void resetConfirmButton() {
@@ -479,6 +498,36 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         a.setDuration(300);
         animationHelper.startAnimation(a);
         currentMargin = newTopMargin;
+
+        int activeServiceIndex = ivis.getActiveServiceIndex();
+
+        int selectedItemPos = (int) getResources().getDimension(R.dimen.pos_0_top_margin);
+
+        for(int i = 0; i < serviceNameTextViews.length; i++) {
+            int newPos;
+            String newColor;
+            int newSize;
+
+            if (i < activeServiceIndex) {
+                newPos = selectedItemPos - (activeServiceIndex-i) * 100 ;
+                serviceNameTextViews[i].setTextColor(Color.parseColor("#707070"));
+                serviceNameTextViews[i].setTextSize(30);
+
+
+            } else if (i == activeServiceIndex) {
+                newPos = selectedItemPos;
+                serviceNameTextViews[i].setTextColor(Color.parseColor("#FFFFFF"));
+                serviceNameTextViews[i].setTextSize(50);
+
+            } else {
+                serviceNameTextViews[i].setTextColor(Color.parseColor("#707070"));
+                serviceNameTextViews[i].setTextSize(30);
+
+                newPos = selectedItemPos + (i-activeServiceIndex) * 100 + 350 ;
+            }
+
+            serviceNameTextViews[i].animate().y(newPos);
+        }
     }
 
     /*
@@ -513,6 +562,8 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
 
         updateHorizontalIndicator();
         verticalIndicatorView.setSelection(activeServiceIndex);
+
+        recyclerViewServiceNames.smoothScrollToPosition(activeServiceIndex);
 
         serviceName.setText(ivis.getActiveService().getLabel());
         this.animateServiceRecyclerViews();
@@ -663,7 +714,10 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         verticalIndicatorView.setCount(ivis.getServiceCount()); // specify total count of indicators
         horizontalIndicatorView.setCount(ivis.getActiveService().getParameterCount());
 
+        ArrayList<String> serviceNames = new ArrayList<>();
         for (int i = 0; i < ivis.getServiceCount() ; i++) {
+
+            serviceNames.add(ivis.getServices().get(i).toString());
 
             ArrayList<String> params = ivis.getServices().get(i).getParametersAsStringArray();
 
