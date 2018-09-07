@@ -365,8 +365,6 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
                 showConfirmAndBackButton();
                 resetSelectButton();
 
-                parameterName.setVisibility(View.INVISIBLE);
-
                 // hide abort button
                 Log.d(TAG, "HIDE abortButton");
                 abortButton.setAlpha(0f);// .animate().alpha(0).setDuration(100).start();
