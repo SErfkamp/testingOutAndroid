@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import com.example.serfk.myapplication.IVISActivity;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,32 +20,43 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startBaseline(View view) {
-        Intent intent = new Intent(this, IVISActivity.class);
-        intent.putExtra("lockingMode",0);
-        intent.putExtra("lockingDuration",0);
-        startActivity(intent);
+        startActivity(createActivity(0));
+
     }
 
-    public void startShortLockings(View view) {
-        Intent intent = new Intent(this, IVISActivity.class);
-        intent.putExtra("lockingMode",1);
-        intent.putExtra("lockingDuration",getResources().getInteger(R.integer.short_locking));
-        startActivity(intent);
+    public void startRegularLockings(View view) {
+        startActivity(createActivity(1));
+
     }
 
-    public void startLongLockings(View view) {
-        Intent intent = new Intent(this, IVISActivity.class);
-        intent.putExtra("lockingMode",2);
-        intent.putExtra("lockingDuration",getResources().getInteger(R.integer.long_locking));
-        startActivity(intent);
+    public void startInteractionLockings(View view) {
+        startActivity(createActivity(2));
+
+    }
+
+    public void startTimeInteractionLockings(View view) {
+        startActivity(createActivity(3));
+
     }
 
     public void startSmartLockings(View view) {
-        Intent intent = new Intent(this, IVISActivity.class);
-        intent.putExtra("lockingMode",3);
-        intent.putExtra("lockingDuration",getResources().getInteger(R.integer.short_locking));
-        startActivity(intent);
+        startActivity(createActivity(4));
     }
 
+    private Intent createActivity(int lockingMode) {
+        int lockingDuration = Integer.parseInt(((EditText) findViewById(R.id.input_locking_duration)).getText().toString());
+        int resetInteractionTime = Integer.parseInt(((EditText) findViewById(R.id.input_reset_action)).getText().toString());
+        int interactionsForLock = Integer.parseInt(((EditText) findViewById(R.id.input_actions)).getText().toString());
+        int lockingAfter = Integer.parseInt(((EditText) findViewById(R.id.input_locking_after)).getText().toString());
+
+        Intent intent = new Intent(this, IVISActivity.class);
+        intent.putExtra("lockingMode", lockingMode);
+        intent.putExtra("lockingDuration", lockingDuration);
+        intent.putExtra("resetInteractionTime", resetInteractionTime);
+        intent.putExtra("interactionsForLock", interactionsForLock);
+        intent.putExtra("lockingAfter", lockingAfter);
+
+        return intent;
+    }
 }
 

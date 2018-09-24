@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
+import java.util.Date;
+
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +70,11 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
     private int lockingDuration;
 
     private boolean isInteracting = false;
+    private int currentInputs = 0;
+    private long prevInteractionTimestamp = 0;
+    private int resetInteractionTime = 1000;
+    private int interactionsForLock = 3;
+    private int lockingAfter = 500;
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -95,7 +102,6 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         serviceNameTextViews[3] = findViewById(R.id.tv_four);
         serviceNameTextViews[4] = findViewById(R.id.tv_five);
 
-        this.lockingDuration = getResources().getInteger(R.integer.locking_duration);
 
         this.animationHelper = findViewById(R.id.animationHelper);
 
@@ -127,7 +133,12 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         this.updateServiceView();
         this.updateParameterView();
 
-        maxInteractionDuration = this.getIntent().getIntExtra("lockingDuration", 1000);
+        maxInteractionDuration = this.getIntent().getIntExtra("interactionTime", 1500);
+        resetInteractionTime = this.getIntent().getIntExtra("resetInteractionTime", 1000);
+        interactionsForLock = this.getIntent().getIntExtra("interactionsForLock", 3);
+        lockingDuration = this.getIntent().getIntExtra("lockingDuration", 1500);
+        lockingAfter = this.getIntent().getIntExtra("lockingAfter", 1500);
+
 
         String ip = getResources().getString(R.string.ip);
         int port = getResources().getInteger(R.integer.port);
@@ -141,7 +152,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
             public boolean onSwipe(Direction direction) {
                 if (ivis.isLocked() && ivis.getLockingMode() > 0) return true;
 
-                if (ivis.getLockingMode() < 3) lockingHandler();
+                if (ivis.getLockingMode() < 4) lockingHandler();
 
                 int activeServiceIndex = ivis.getActiveServiceIndex();
                 int activeParameterIndexForService = ivis.getActiveService().getActiveParameterIndex();
@@ -594,6 +605,8 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
 
         this.parameterName.setText(ivis.getActiveService().getActiveParameter().getLabel());
         recyclerViewServices[activeServiceIndex].smoothScrollToPosition(activeParameterIndex);
+
+        Log.d(TAG, "Scroll to Position : " + activeParameterIndex);
     }
 
     private void updateValueView() {
@@ -612,14 +625,47 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     private void lockingHandler() {
-        if (!isInteracting) {
-            isInteracting = true;
-            new android.os.Handler().postDelayed(
-                    new Runnable() {
-                        public void run() {
-                            lockIvis();
-                        }
-                    }, maxInteractionDuration);
+
+        switch(ivis.getLockingMode()) {
+            case 1:
+                break;
+            case 2:
+                if (!isInteracting) {
+                    isInteracting = true;
+
+                    new android.os.Handler().postDelayed(
+                            new Runnable() {
+                                public void run() {
+                                    lockIvis();
+                                }
+                            }, maxInteractionDuration);
+                }
+                break;
+            case 3:
+                long currentTimestamp = new Date().getTime();
+                System.out.println("lockingHandler: CURRENT: " + currentTimestamp + " PREV: " + prevInteractionTimestamp);
+
+                if(currentTimestamp - prevInteractionTimestamp > resetInteractionTime) {
+                    currentInputs = 1;
+                    System.out.println("lockingHandler: resetInputs = 1");
+
+                    prevInteractionTimestamp = currentTimestamp;
+                } else {
+
+                    if (++currentInputs >= interactionsForLock) {
+                        System.out.println("lockingHandler: Inputs <3 : " + currentInputs);
+
+                        new android.os.Handler().post(
+                                new Runnable() {
+                                    public void run() {
+                                        lockIvis();
+                                    }
+                                });
+                    }
+                }
+                break;
+            case 4:
+                break;
         }
     }
 
@@ -635,7 +681,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         } else {
             Log.d(TAG,"send lock");
             //only send when ivis creates locking and not when lockings are send from openDS
-            if (ivis.getLockingMode() < 3) socketClient.sendDataToNetwork("ivis_locked");
+            if (ivis.getLockingMode() < 4) socketClient.sendDataToNetwork("ivis_locked");
 
             ivis.lock();
 

@@ -1,7 +1,4 @@
 <resources>
     <string name="app_name">IVIS</string>
-    <integer name="short_locking">1500</integer>
-    <integer name="long_locking">2500</integer>
-    <integer name="locking_duration">1500</integer>
     <integer name="animation_speed">5</integer>
 </resources>
