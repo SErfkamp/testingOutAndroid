@@ -51,6 +51,10 @@ public class SocketClient extends AsyncTask<Void, byte[], Boolean> {
                 nos = new PrintWriter(nsocket.getOutputStream());
 
                 this.sendDataToNetwork("lockingMode_"+ivisActivity.getIvis().getLockingMode());
+                this.sendDataToNetwork("lockingDuration_"+ivisActivity.getLockingDuration());
+                this.sendDataToNetwork("maxInteractionDuration_"+ivisActivity.getMaxInteractionDuration());
+                this.sendDataToNetwork("actionsForLocking_"+ivisActivity.getInteractionsForLock());
+                this.sendDataToNetwork("resetInputAfter_"+ivisActivity.getResetInteractionTime());
 
                 Log.i(TAG, "doInBackground: Socket created, streams assigned");
                 Log.i(TAG, "doInBackground: Waiting for inital data...");

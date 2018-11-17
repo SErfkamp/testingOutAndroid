@@ -30,14 +30,14 @@
                 android:textColor="#FFF" />
 
             <Button
-                android:id="@+id/bRegularLockings"
+                android:id="@+id/bTrackLockings"
                 android:layout_width="400dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="50dp"
                 android:background="#707070"
-                android:onClick="startRegularLockings"
-                android:text="Regular"
+                android:onClick="startTrackLockings"
+                android:text="Track (Proactive)"
                 android:textColor="#FFF" />
 
             <Button
@@ -52,25 +52,14 @@
                 android:textColor="#FFF" />
 
             <Button
-                android:id="@+id/bTimeInteractionLockings"
+                android:id="@+id/bDriveLockings"
                 android:layout_width="400dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="50dp"
                 android:background="#707070"
-                android:onClick="startTimeInteractionLockings"
-                android:text="Time Interaction"
-                android:textColor="#FFF" />
-
-            <Button
-                android:id="@+id/bSmartLockings"
-                android:layout_width="400dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="50dp"
-                android:background="#707070"
-                android:onClick="startSmartLockings"
-                android:text="Smart"
+                android:onClick="startDriveLockings"
+                android:text="Drive (Smart)"
                 android:textColor="#FFF" />
 
         </LinearLayout>

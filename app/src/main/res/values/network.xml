@@ -1,12 +1,14 @@
 <resources>
 
     <!--DESKTOP -->
-    <!--<string name="ip">192.168.178.29</string>-->
+    <string name="ip">192.168.0.9</string>
+
+    <!-- dont know -->
     <!--<string name="ip">172.18.187.250</string>-->
     <!--<string name="ip">172.20.10.9</string>-->
 
     <!-- LAPTOP EDUROAM -->
-    <string name="ip">131.159.215.27</string>
+    <!--<string name="ip">131.159.215.27</string>-->
 
     <!-- SIMULATOR -->
     <!--<string name="ip">131.159.7.83</string>-->

@@ -24,23 +24,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void startRegularLockings(View view) {
+    public void startInteractionLockings(View view) {
         startActivity(createActivity(1));
 
     }
 
-    public void startInteractionLockings(View view) {
+    public void startTrackLockings(View view) {
         startActivity(createActivity(2));
 
     }
 
-    public void startTimeInteractionLockings(View view) {
+    public void startDriveLockings(View view) {
         startActivity(createActivity(3));
 
-    }
-
-    public void startSmartLockings(View view) {
-        startActivity(createActivity(4));
     }
 
     private Intent createActivity(int lockingMode) {

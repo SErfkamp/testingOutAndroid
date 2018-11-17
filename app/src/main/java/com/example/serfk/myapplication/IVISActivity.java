@@ -76,6 +76,30 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
     private int interactionsForLock = 3;
     private int lockingAfter = 500;
 
+    public int getLockingAfter() {
+        return lockingAfter;
+    }
+
+    public int getResetInteractionTime() {
+        return resetInteractionTime;
+    }
+
+    public int getInteractionsForLock() {
+        return interactionsForLock;
+    }
+
+    public int getMaxInteractionDuration() {
+        return maxInteractionDuration;
+    }
+
+    public int getLockingDuration() {
+        return lockingDuration;
+    }
+
+    public void setMaxInteractionDuration(int maxInteractionDuration) {
+        this.maxInteractionDuration = maxInteractionDuration;
+    }
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -123,7 +147,12 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         this.recyclerViewValues = findViewById(R.id.recyclerViewValue);
 
         this.recyclerViewServiceNames = findViewById(R.id.recyclerViewServiceName);
-
+        this.recyclerViewServiceNames.setLayoutManager(new RecyclerView.LayoutManager() {
+            @Override
+            public RecyclerView.LayoutParams generateDefaultLayoutParams() {
+                return null;
+            }
+        });
 
         lockingBorder = findViewById(R.id.lockingBorder);
         lockingBorder.setVisibility(View.INVISIBLE);
@@ -152,7 +181,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
             public boolean onSwipe(Direction direction) {
                 if (ivis.isLocked() && ivis.getLockingMode() > 0) return true;
 
-                if (ivis.getLockingMode() < 4) lockingHandler();
+                //if (ivis.getLockingMode() < 4) lockingHandler();
 
                 int activeServiceIndex = ivis.getActiveServiceIndex();
                 int activeParameterIndexForService = ivis.getActiveService().getActiveParameterIndex();
@@ -421,7 +450,6 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
 
     }
 
-
     /*
     RESETS
      */
@@ -593,7 +621,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         updateHorizontalIndicator();
         verticalIndicatorView.setSelection(activeServiceIndex);
 
-        recyclerViewServiceNames.smoothScrollToPosition(activeServiceIndex);
+        recyclerViewServiceNames.scrollToPosition(activeServiceIndex);
 
         serviceName.setText(ivis.getActiveService().getLabel());
         this.animateServiceRecyclerViews();
@@ -626,7 +654,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         return ivis;
     }
 
-    private void lockingHandler() {
+    /*private void lockingHandler() {
 
         switch(ivis.getLockingMode()) {
             case 1:
@@ -669,7 +697,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
             case 4:
                 break;
         }
-    }
+    }*/
 
     public boolean lockIvis() {
 
@@ -683,7 +711,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         } else {
             Log.d(TAG,"send lock");
             //only send when ivis creates locking and not when lockings are send from openDS
-            if (ivis.getLockingMode() < 4) socketClient.sendDataToNetwork("ivis_locked");
+            //if (ivis.getLockingMode() < 4) socketClient.sendDataToNetwork("ivis_locked");
 
             ivis.lock();
 
@@ -706,7 +734,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
             isInteracting = false;
             Log.d(TAG,"send unlock");
 
-            socketClient.sendDataToNetwork("ivis_unlocked");
+            //socketClient.sendDataToNetwork("ivis_unlocked");
             lockingBorder.setVisibility(View.INVISIBLE);
             ivis.unlock();
         }
@@ -810,13 +838,6 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         recyclerViewValues.setHorizontalFadingEdgeEnabled(true);
     }
 
-    public int getMaxInteractionDuration() {
-        return maxInteractionDuration;
-    }
-
-    public void setMaxInteractionDuration(int maxInteractionDuration) {
-        this.maxInteractionDuration = maxInteractionDuration;
-    }
 
     @Override
     protected void onDestroy() {

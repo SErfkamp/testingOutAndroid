@@ -17,7 +17,7 @@ public class CustomLayoutManager extends LinearLayoutManager {
     private static float factor;
 
 
-    CustomLayoutManager (
+    public CustomLayoutManager (
             final Context context,
             final int orientation,
             final boolean reverseLayout,
