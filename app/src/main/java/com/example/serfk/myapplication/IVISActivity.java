@@ -699,14 +699,16 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         }
     }*/
 
-    public boolean lockIvis() {
+    public void lockIvis() {
 
         //dont lock in Baseline
-        if(ivis.getLockingMode() == 0) return false;
+       //if(ivis.getLockingMode() == 0) return false;
 
         Log.d(TAG, "lock IVIS");
+        ivis.lock();
+        lockingBorder.setVisibility(View.VISIBLE);
 
-        if(ivis.isLocked()) {
+        /*if(ivis.isLocked()) {
             return false;
         } else {
             Log.d(TAG,"send lock");
@@ -724,20 +726,21 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
                         }
                     }, lockingDuration);
             return true;
-        }
+        }*/
     }
 
     public void unlockIvis() {
         Log.d(TAG, "unlock IVIS");
-
-        if(ivis.isLocked()) {
-            isInteracting = false;
-            Log.d(TAG,"send unlock");
+        lockingBorder.setVisibility(View.INVISIBLE);
+        ivis.unlock();
+       /* if(ivis.isLocked()) {
+            //isInteracting = false;
+            //Log.d(TAG,"send unlock");
 
             //socketClient.sendDataToNetwork("ivis_unlocked");
             lockingBorder.setVisibility(View.INVISIBLE);
             ivis.unlock();
-        }
+        }*/
     }
 
     /*
