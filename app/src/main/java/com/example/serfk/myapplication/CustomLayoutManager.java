@@ -7,9 +7,11 @@ import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 public class CustomLayoutManager extends LinearLayoutManager {
 
+    private static final String TAG = "CustomLayoutManager";
     private  int parentWidth;
     private  int itemWidth;
     private  int numItems;
@@ -64,6 +66,7 @@ public class CustomLayoutManager extends LinearLayoutManager {
         RecyclerView.SmoothScroller smoothScroller = new CenterSmoothScroller(recyclerView.getContext());
         smoothScroller.setTargetPosition(position);
         startSmoothScroll(smoothScroller);
+        //Log.d(TAG, "startSmoothScrollToPosition: " + position);
     }
 
     private static class CenterSmoothScroller extends LinearSmoothScroller {
