@@ -172,8 +172,8 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         String ip = getResources().getString(R.string.ip);
         int port = getResources().getInteger(R.integer.port);
 
-        /*socketClient = new SocketClient(ip, port, this);
-        socketClient.execute();*/
+        socketClient = new SocketClient(ip, port, this);
+        socketClient.execute();
 
         gestureDetector = new GestureDetector(this, new OnSwipeListener(){
 
@@ -295,9 +295,9 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
 
                 }
 
-                /*socketClient.sendDataToNetwork(msg+"-"+ivis.getActiveServiceIndex()
+                socketClient.sendDataToNetwork(msg+"-"+ivis.getActiveServiceIndex()
                         +"-"+ivis.getActiveService().getActiveParameterIndex()
-                        +"-"+ivis.getActiveService().getActiveParameter().getActiveValueIndex());*/
+                        +"-"+ivis.getActiveService().getActiveParameter().getActiveValueIndex());
 
                 return true;
             }
@@ -865,7 +865,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //socketClient.cancel(true); //In case the task is currently running
+        socketClient.cancel(true); //In case the task is currently running
     }
 
 }
