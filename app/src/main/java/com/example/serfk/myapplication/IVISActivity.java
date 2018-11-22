@@ -37,6 +37,8 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
     private static final String TAG = "IVISActivity";
 
     private View lockingBorder;
+    private View lockingBackground;
+
     private ImageView backButton;
     private ImageView confirmButton;
     private ImageView selectButton;
@@ -156,6 +158,9 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
 
         lockingBorder = findViewById(R.id.lockingBorder);
         lockingBorder.setVisibility(View.INVISIBLE);
+
+        lockingBackground = findViewById(R.id.lockingBackground);
+        lockingBackground.setVisibility(View.INVISIBLE);
 
         this.initIVIS(getIntent().getIntExtra("lockingMode", 0));
         this.initRecyclerView();
@@ -727,6 +732,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         Log.d(TAG, "lock IVIS");
         ivis.lock();
         lockingBorder.setVisibility(View.VISIBLE);
+        lockingBackground.setVisibility(View.VISIBLE);
 
         /*if(ivis.isLocked()) {
             return false;
@@ -752,6 +758,8 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
     public void unlockIvis() {
         Log.d(TAG, "unlock IVIS");
         lockingBorder.setVisibility(View.INVISIBLE);
+        lockingBackground.setVisibility(View.INVISIBLE);
+
         ivis.unlock();
        /* if(ivis.isLocked()) {
             //isInteracting = false;
@@ -787,8 +795,8 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
 
         // SERVICES TO CREATE
 
-        int PARAMS_FOR_SERVICES = 5;
-        int VALUES_FOR_PARAMS = 5;
+        int PARAMS_FOR_SERVICES = 10;
+        int VALUES_FOR_PARAMS = 10;
 
         String[] SERVICE_NAMES = {"A","B","C","D","E"};
 
@@ -823,7 +831,10 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int parentWidth = metrics.widthPixels;
+        //int offsetWidth = (int) getResources().getDimension(R.dimen.offsetWidth);
         int itemWidth = (int) getResources().getDimension(R.dimen.itemWidth);
+        int itemWidthValue = (int) getResources().getDimension(R.dimen.itemWidthValue); ;
+
         int factor = getResources().getInteger(R.integer.animation_speed);
 
         //right now only works for same parameter length for every service
@@ -853,7 +864,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         ArrayList<String> values = ivis.getActiveService().getParameters().get(1).getValues();
 
         CustomLayoutManager layoutManagerValue = new CustomLayoutManager(
-                this, LinearLayoutManager.HORIZONTAL, false, parentWidth, itemWidth, values.size(), factor);
+                this, LinearLayoutManager.HORIZONTAL, false, parentWidth, itemWidthValue, values.size(), factor);
         RecyclerViewAdapter adapterValue = new RecyclerViewAdapter(values, this, R.layout.layout_listitem_value);
         recyclerViewValues = findViewById(R.id.recyclerViewValue);
         recyclerViewValues.setLayoutManager(layoutManagerValue);

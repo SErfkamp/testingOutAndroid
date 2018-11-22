@@ -9,6 +9,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="itemWidth">30dp</dimen>
+    <dimen name="itemWidthValue">15dp</dimen>
+    <dimen name="offsetWidth">150dp</dimen>
 
     <dimen name="upperButton">125dp</dimen>
     <dimen name="lowerButton">475dp</dimen>

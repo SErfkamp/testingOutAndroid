@@ -285,14 +285,17 @@
         app:piv_unselectedColor="#000"
         app:piv_orientation="vertical"
         />
-    <!--app:piv_dynamicCount="true"-->
 
-    <!-- attrs:piv_padding="12dp"
-        attrs:piv_radius="8dp"-->
     <ImageView
         android:id="@+id/lockingBorder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/locking_border" />
+
+    <ImageView
+        android:id="@+id/lockingBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/locking_background" />
 
 </RelativeLayout>

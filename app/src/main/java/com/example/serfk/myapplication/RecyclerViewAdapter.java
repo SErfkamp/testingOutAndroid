@@ -39,6 +39,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.itemView.setSelected(selectedPos == position);
         if(position == 0 && mLabels.get(position).equals("")) {
             holder.menuChangeImage.setBackgroundResource(R.drawable.change_menu);
+        } else if (mLabels.get(position).charAt(0) != 'O'){
+            holder.menuChangeImage.setBackgroundResource(0);
         }
     }
 
