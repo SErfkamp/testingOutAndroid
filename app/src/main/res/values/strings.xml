@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">IVIS</string>
     <integer name="animation_speed">5</integer>
+
+    <integer name="animation_duration_fast">300</integer>
+    <integer name="animation_duration_middle">400</integer>
+    <integer name="animation_duration_slow">500</integer>
+
 </resources>

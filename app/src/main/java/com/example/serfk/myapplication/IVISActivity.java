@@ -207,10 +207,10 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
 
                     } else {
                         if (activeMenuLevel == 0) {
-                            msg += "return";
+                            msg += "return-up";
                             doReturn();
                         } else if (activeMenuLevel == 1) {
-                            msg += "abort";
+                            msg += "abort-up";
                             doAbort();
                         }
                     }
@@ -224,17 +224,17 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
                             msg += "service-down";
                             updateServiceView();
                         } else {
-                            msg += "service-down-error-";
+                            msg += "service-down-error";
                         }
 
                         Log.d(TAG, "onSwipe: down  - activeService: " + ivis.getActiveServiceIndex());
 
                     } else {
                         if (activeMenuLevel == 0) {
-                            msg += "confirm";
+                            msg += "confirm-down";
                             doConfirm();
                         } else if (activeMenuLevel == 1) {
-                            msg += "select";
+                            msg += "select-down";
                             doSelect();
                         }
                     }
@@ -251,7 +251,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
                             msg += "param-left";
                             updateParameterView();
                         } else {
-                            msg += "param-left-error-";
+                            msg += "param-left-error";
                         }
 
                         Log.d(TAG, "onSwipe: left - activeParameter: " + ivis.getActiveService().getActiveParameterIndex());
@@ -262,7 +262,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
 
                             updateValueView();
                         } else {
-                            msg += "value-left-error-";
+                            msg += "value-left-error";
 
                         }
 
@@ -352,7 +352,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
                 backButton.setAlpha(0f);
 
             }
-        }).setDuration(500).start();
+        }).setDuration(getResources().getInteger(R.integer.animation_duration_middle)).start();
     }
 
     private void doReturn() {
@@ -382,7 +382,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
                 confirmButton.setAlpha(0f); //.animate().alpha(0).setDuration(100).start();
 
             }
-        }).setDuration(500).start();
+        }).setDuration(getResources().getInteger(R.integer.animation_duration_middle)).start();
 
     }
 
@@ -417,7 +417,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
                 abortButton.setAlpha(0f);// .animate().alpha(0).setDuration(100).start();
 
             }
-        }).setDuration(500).start();
+        }).setDuration(getResources().getInteger(R.integer.animation_duration_middle)).start();
 
     }
 
@@ -451,7 +451,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
                 selectButton.setAlpha(0f);
 
             }
-        }).setDuration(500).start();
+        }).setDuration(getResources().getInteger(R.integer.animation_duration_middle)).start();
 
     }
 
@@ -558,7 +558,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
                 animationHelper.setLayoutParams(params);
             }
         };
-        a.setDuration(300);
+        a.setDuration(getResources().getInteger(R.integer.animation_duration_fast));
         animationHelper.startAnimation(a);
         currentMargin = newTopMargin;
 
@@ -620,7 +620,7 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
                 tv_one.setLayoutParams(params);
             }
         };
-        a.setDuration(300);
+        a.setDuration(getResources().getInteger(R.integer.animation_duration_fast));
         animationHelper.startAnimation(a);
 
         updateHorizontalIndicator();
@@ -651,9 +651,6 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         });
 
         recyclerViewServices[activeServiceIndex].smoothScrollToPosition(activeParameterIndex);
-
-
-        Log.d(TAG, "Scroll to Position : " + activeParameterIndex);
     }
 
     private void updateValueView() {

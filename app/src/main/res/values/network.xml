@@ -10,6 +10,10 @@
     <!-- LAPTOP EDUROAM -->
     <!--<string name="ip">131.159.215.27</string>-->
 
+    <!-- LAPTOP KAWO2 -->
+    <!--<string name="ip">10.183.225.10</string>-->
+
+
     <!-- SIMULATOR -->
     <!--<string name="ip">131.159.7.83</string>-->
     <!--<string name="ip">127.0.0.1</string>-->
