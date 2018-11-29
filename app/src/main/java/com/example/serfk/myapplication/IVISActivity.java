@@ -103,6 +103,12 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     @Override
+    public void onBackPressed() {
+        socketClient.sendDataToNetwork("interrupt");
+        super.onBackPressed();
+    }
+
+    @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
