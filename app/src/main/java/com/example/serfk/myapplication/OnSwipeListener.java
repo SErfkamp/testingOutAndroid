@@ -35,12 +35,12 @@ public class OnSwipeListener extends GestureDetector.SimpleOnGestureListener {
         float x2 = e2.getX();
         float y2 = e2.getY();
 
-        float xDiff = x1 - x2;
-        float yDiff = y1 - y2;
+        float xDiff = Math.abs(x1 - x2);
+        float yDiff = Math.abs(y1 - y2);
 
         Log.d("onSwipe", "xDiff:" + xDiff + " - yDiff: " +yDiff);
 
-        if(xDiff < 100 && yDiff < 100) {
+        if(xDiff < 100 && yDiff < 100 ) {
             return false;
         }
 
