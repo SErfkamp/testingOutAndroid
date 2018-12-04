@@ -1,5 +1,6 @@
 package com.example.serfk.myapplication;
 
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
@@ -33,6 +34,15 @@ public class OnSwipeListener extends GestureDetector.SimpleOnGestureListener {
 
         float x2 = e2.getX();
         float y2 = e2.getY();
+
+        float xDiff = x1 - x2;
+        float yDiff = y1 - y2;
+
+        Log.d("onSwipe", "xDiff:" + xDiff + " - yDiff: " +yDiff);
+
+        if(xDiff < 100 && yDiff < 100) {
+            return false;
+        }
 
         Direction direction = getDirection(x1,y1,x2,y2);
         return onSwipe(direction);
