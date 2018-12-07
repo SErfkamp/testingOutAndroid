@@ -732,10 +732,10 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         //dont lock in Baseline
        //if(ivis.getLockingMode() == 0) return false;
 
-        Log.d(TAG, "lock IVIS");
         ivis.lock();
         lockingBorder.setVisibility(View.VISIBLE);
         lockingBackground.setVisibility(View.VISIBLE);
+        Log.d(TAG, "lock IVIS - " + System.currentTimeMillis());
 
         /*if(ivis.isLocked()) {
             return false;
@@ -759,10 +759,9 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     public void unlockIvis() {
-        Log.d(TAG, "unlock IVIS");
         lockingBorder.setVisibility(View.INVISIBLE);
         lockingBackground.setVisibility(View.INVISIBLE);
-
+        Log.d(TAG, "unlock IVIS - " + System.currentTimeMillis());
         ivis.unlock();
        /* if(ivis.isLocked()) {
             //isInteracting = false;
