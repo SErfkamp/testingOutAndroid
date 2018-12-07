@@ -727,26 +727,16 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         }
     }*/
 
-    public void lockIvis() {
+    public void lockIvis_unlockAfter(int lockingDuration) {
 
-        //dont lock in Baseline
-       //if(ivis.getLockingMode() == 0) return false;
-
-        ivis.lock();
-        lockingBorder.setVisibility(View.VISIBLE);
-        lockingBackground.setVisibility(View.VISIBLE);
-        Log.d(TAG, "lock IVIS - " + System.currentTimeMillis());
-
-        /*if(ivis.isLocked()) {
-            return false;
-        } else {
             Log.d(TAG,"send lock");
             //only send when ivis creates locking and not when lockings are send from openDS
             //if (ivis.getLockingMode() < 4) socketClient.sendDataToNetwork("ivis_locked");
 
             ivis.lock();
-
+            Log.d(TAG, "lock - " + new Date().getTime());
             lockingBorder.setVisibility(View.VISIBLE);
+            lockingBackground.setVisibility(View.VISIBLE);
 
             new android.os.Handler().postDelayed(
                     new Runnable() {
@@ -754,19 +744,23 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
                             unlockIvis();
                         }
                     }, lockingDuration);
-            return true;
-        }*/
+    }
+
+    public void lockIvis() {
+
+        ivis.lock();
+        lockingBorder.setVisibility(View.VISIBLE);
+        lockingBackground.setVisibility(View.VISIBLE);
+        Log.d(TAG, "lock - " + new Date().getTime());
+
     }
 
     public void unlockIvis() {
         lockingBorder.setVisibility(View.INVISIBLE);
         lockingBackground.setVisibility(View.INVISIBLE);
-        Log.d(TAG, "unlock IVIS - " + System.currentTimeMillis());
+        Log.d(TAG, "unlock -" + new Date().getTime());
         ivis.unlock();
-       /* if(ivis.isLocked()) {
-            //isInteracting = false;
-            //Log.d(TAG,"send unlock");
-
+        /*
             //socketClient.sendDataToNetwork("ivis_unlocked");
             lockingBorder.setVisibility(View.INVISIBLE);
             ivis.unlock();

@@ -8,13 +8,16 @@
     <!--<string name="ip">172.20.10.9</string>-->
 
     <!-- LAPTOP EDUROAM -->
-    <string name="ip">131.159.215.27</string>
+    <!--<string name="ip">131.159.213.214</string>-->
 
     <!-- LAPTOP KAWO2 -->
     <!--<string name="ip">10.183.225.10</string>-->
 
+    <!-- LAPTOP  -->
+    <!--<string name="ip">10.0.2.2</string>-->
+
     <!-- SIMULATOR -->
-    <!--<string name="ip">131.159.7.83</string>-->
+    <string name="ip">131.159.7.83</string>
 
 
     <integer name="port">9020</integer>

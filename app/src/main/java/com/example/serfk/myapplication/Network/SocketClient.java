@@ -120,6 +120,9 @@ public class SocketClient extends AsyncTask<Void, byte[], Boolean> {
         Log.i(TAG, "SendDataToNetwork: Cannot send message. Socket is closed");
         return false;
     }
+    //-65957
+    //65801
+    //66091
 
     @Override
     protected void onProgressUpdate(byte[]... values) {
