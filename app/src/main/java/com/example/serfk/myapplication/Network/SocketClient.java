@@ -132,10 +132,14 @@ public class SocketClient extends AsyncTask<Void, byte[], Boolean> {
             Log.d("AsyncTask", msg);
             switch(msg) {
                 case "lock_ivis":
-                    ivisActivity.lockIvis();
+                    if(ivisActivity.getIvis().getLockingMode() != 1) {
+                        ivisActivity.lockIvis();
+                    }
                     break;
                 case "unlock_ivis":
-                    ivisActivity.unlockIvis();
+                    if(ivisActivity.getIvis().getLockingMode() != 1) {
+                        ivisActivity.unlockIvis();
+                    }
                     break;
             }
         }

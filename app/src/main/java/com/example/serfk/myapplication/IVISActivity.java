@@ -313,6 +313,10 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
                         +"-"+ivis.getActiveService().getActiveParameterIndex()
                         +"-"+ivis.getActiveService().getActiveParameter().getActiveValueIndex());
 
+                if(ivis.getLockingMode() == 1) {
+                    lockIvis_unlockAfter(lockingDuration);
+                }
+
                 return true;
             }
         });
@@ -763,6 +767,8 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
         lockingBackground.setVisibility(View.INVISIBLE);
         Log.d(TAG, "unlock -" + new Date().getTime());
         ivis.unlock();
+        socketClient.sendDataToNetwork("ivis_unlocked");
+
         /*
             //socketClient.sendDataToNetwork("ivis_unlocked");
             lockingBorder.setVisibility(View.INVISIBLE);
