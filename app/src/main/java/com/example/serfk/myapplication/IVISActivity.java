@@ -190,7 +190,10 @@ public class IVISActivity extends AppCompatActivity implements View.OnTouchListe
 
             @Override
             public boolean onSwipe(Direction direction) {
-                if (ivis.isLocked() && ivis.getLockingMode() > 0) return true;
+                if (ivis.isLocked() && ivis.getLockingMode() > 0) {
+                    socketClient.sendDataToNetwork("input-while-locked");
+                    return true;
+                }
 
                 //if (ivis.getLockingMode() < 4) lockingHandler();
 
